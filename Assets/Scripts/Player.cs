@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float mouseSens = 40.0f;
     [SerializeField] private float forceScalar = 1.0f;
+    [SerializeField] private float hitRange = 5.0f;
 
     private Rigidbody rb;
     private Camera cam;
@@ -55,11 +57,20 @@ public class Player : MonoBehaviour
 
         transform.localRotation = xQuat * yQuat;
 
-        if (attackAction.WasPressedThisFrame() && Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit))
+        if (attackAction.WasPressedThisFrame() && Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, hitRange))
         {
-            if (hit.transform.gameObject.CompareTag("Grapple"))
+            if (hit.transform.gameObject.CompareTag("Enemy"))
             {
-                // TODO: affect things
+                Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
+
+                if (enemy == null)
+                {
+                    Debug.LogWarning("Object has tag enemy but does not have enemy component");
+                }
+                else
+                {
+                    enemy.Found();
+                }
             }
         }
     }
