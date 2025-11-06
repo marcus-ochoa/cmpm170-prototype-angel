@@ -4,6 +4,7 @@ public class EndTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.EndGame(true);
+        Debug.Log("TRIGGERED");
+        if (other.CompareTag("Victim")) GameManager.Instance.EndGame(true);
     }
 }
